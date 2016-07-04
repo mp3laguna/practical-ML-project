@@ -1,7 +1,9 @@
 ---
 title: "Qualitative Activity Recognition"
-output: 
-  html_document: 
+output:
+  pdf_document:
+    toc: yes
+  html_document:
     fig_caption: yes
     toc: yes
 ---
@@ -31,7 +33,7 @@ dim(orTraining)
 dim(orTesting)
 ```
 
-Up to `r dim(orTraining)[2]` columns are included in both training and testing data so some previous tidyng and variable preprocessing should be done using large datasets techniques.  
+Up to `r dim(orTraining)[2]` columns are included in both training and testing data so some previous data cleaning and variable preprocessing should be done using large datasets techniques.  
 
 First of all, column class wil be verified:
 
@@ -40,7 +42,7 @@ clases <- sapply(orTraining[,1:160], class)
 table(clases)
 ```
 
-Data from IMUs are in columns from 8 to 159 so our train and test features are reduced to these columns. Also, many factor columns are found so I will coerce this columns to numeric. NAs will be cleared and low variance features removed.
+Data from IMUs are in columns from 8 to 159 so our train and test features are reduced to these columns. Also, many factor columns are found so these will be coerced to numeric. NAs will be filled with zeros and low variance features will be removed.
 
 ```{r, warning=FALSE}
 # subset columns for features
