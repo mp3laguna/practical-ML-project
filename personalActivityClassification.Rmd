@@ -1,6 +1,9 @@
 ---
 title: "Qualitative Activity Recognition"
-output: html_document
+output: 
+  html_document: 
+    fig_caption: yes
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
