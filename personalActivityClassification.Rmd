@@ -1,0 +1,124 @@
+---
+title: "Qualitative Activity Recognition"
+author: "Miguel Pintor"
+date: "30 de junio de 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary  
+
+In this document a machine learning algorithim will be trained in order to find the best fit for classifying qualitative activity recognition of wheight lifting exercises. The data is included in Weight Lifting Exercise Dataset [[1]](http://groupware.les.inf.puc-rio.br/public/papers/2013.Velloso.QAR-WLE.pdf) and was taken from 9 degrees of freedom IMUs mounted on glove, armband, lumbar belt and dumbbell. Weight lifting exercise was performed correctly and with a set of common mistakes so classifyng correct or four of mistaked performances is our goal.
+
+## Loading Data  
+
+Data is divided in a training and a test set.  
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+setwd("C:/Users/mpintor/Documents/00educa/coursera/data science/08 Practical Machine Learning/project")
+library(knitr); library(rattle); library(caret); library(corrplot); library(randomForest)
+```
+
+
+```{r}
+orTraining <- read.csv("data/pml-training.csv")
+orTesting <- read.csv("data/pml-testing.csv")
+dim(orTraining)
+dim(orTesting)
+```
+
+Up to `r dim(orTraining)[2]` columns are included in both training and testing data so some previous tidyng and variable preprocessing should be done using large datasets techniques.  
+
+First of all, column class wil be verified:
+
+```{r}
+clases <- sapply(orTraining[,1:160], class)
+table(clases)
+```
+
+Data from IMUs is in columns from 8 to 159 so our train and test features are reduced to these columns. Also, many factor columns are found so I will coerce this columns to numeric. NAs will be cleared and low variance features removed.
+
+```{r, warning=FALSE}
+# subset columns for features
+trainFeatures <- orTraining[,8:159]
+testFeatures <- orTesting[,8:159]
+# coerce factors to numeric
+for(i in seq(1, dim(trainFeatures)[2])){
+        if(is.factor(trainFeatures[,i])){
+                trainFeatures[,i] <- as.numeric(as.character(trainFeatures[,i]))
+                testFeatures[,i] <- as.numeric(as.character(testFeatures[,i]))
+        }
+}
+# NAs to zero
+trainFeatures[is.na(trainFeatures)] <- 0
+testFeatures[is.na(testFeatures)] <- 0
+# near zero variance features remotion
+nzv <- nearZeroVar(trainFeatures)
+trainFeatures <- trainFeatures[,-nzv]
+testFeatures <- testFeatures[,-nzv]
+```
+
+After removing near zero variance features, only `r dim(trainFeatures)[2]` are included in analysis.  
+
+Let's have a look to correlation matrix for these features.
+
+```{r, fig.align='center'}
+corMatrix <- cor(trainFeatures)
+corrplot(corMatrix, method="circle", tl.cex = .5, type = "lower")
+```
+
+There are some high correlated features so these wil be removed with default cutoff of .9.
+
+```{r}
+corFeatures <- findCorrelation(corMatrix)
+testFeatures <- testFeatures[, -corFeatures]
+trainFeatures <- trainFeatures[, -corFeatures]
+```
+
+
+Finally, only `r dim(trainFeatures)[2]` features are included in analysis. Classe colum is binded to train set.
+
+```{r}
+train <- cbind(classe = orTraining$classe, trainFeatures)
+```
+
+
+
+## Prediction model 
+
+As seen in E Velloso, A Bulling, H Gellersen, W Ugulino, H Fuks  [[1]](http://groupware.les.inf.puc-rio.br/public/papers/2013.Velloso.QAR-WLE.pdf), because of the characteristic noise in the sensor data Random Forest approach is used. A cross validation, with five folds is defined via trainControl.
+
+```{r, cache = TRUE, warning=FALSE, message=FALSE}
+set.seed(2302)
+trCtrl <- trainControl(method = "cv", number = 5)
+rfModel <- train(classe ~., data=train, method = "rf", trControl = trCtrl)
+rfModel$finalModel
+```
+
+The mean decrease in feature impurity plot:
+
+```{r, fig.align='center'}
+varImpPlot(rfModel$finalModel, main="Variable Importance", cex = .6)
+```
+
+## Test set result
+
+Random forest fitted is applied on test set to predict values asked for Coursera Practical Machine Learning Course Project.
+```{r}
+result <- predict(rfModel$finalModel, testFeatures)
+result
+```
+
+
+
+
+
+
+## References
+
+[[1]](http://groupware.les.inf.puc-rio.br/public/papers/2013.Velloso.QAR-WLE.pdf) Qualitative activity recognition of weight lifting exercises
+E Velloso, A Bulling, H Gellersen, W Ugulino, H Fuks
+Proceedings of the 4th Augmented Human International Conference, 116-123
