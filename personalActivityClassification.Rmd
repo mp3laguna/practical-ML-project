@@ -1,7 +1,5 @@
 ---
 title: "Qualitative Activity Recognition"
-author: "Miguel Pintor"
-date: "30 de junio de 2016"
 output: html_document
 ---
 
@@ -18,7 +16,7 @@ In this document a machine learning algorithim will be trained in order to find 
 Data is divided in a training and a test set.  
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-setwd("C:/Users/mpintor/Documents/00educa/coursera/data science/08 Practical Machine Learning/project")
+setwd("C:/Users/mpintor/Documents/00educa/coursera/data science/08 Practical Machine Learning/practical ML project")
 library(knitr); library(rattle); library(caret); library(corrplot); library(randomForest)
 ```
 
