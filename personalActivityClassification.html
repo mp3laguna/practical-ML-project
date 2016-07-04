@@ -139,7 +139,7 @@ table(clases)</code></pre>
 <pre><code>## clases
 ##  factor integer numeric 
 ##      37      35      88</code></pre>
-<p>Data from IMUs is in columns from 8 to 159 so our train and test features are reduced to these columns. Also, many factor columns are found so I will coerce this columns to numeric. NAs will be cleared and low variance features removed.</p>
+<p>Data from IMUs are in columns from 8 to 159 so our train and test features are reduced to these columns. Also, many factor columns are found so I will coerce this columns to numeric. NAs will be cleared and low variance features removed.</p>
 <pre class="r"><code># subset columns for features
 trainFeatures &lt;- orTraining[,8:159]
 testFeatures &lt;- orTesting[,8:159]

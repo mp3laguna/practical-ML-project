@@ -37,7 +37,7 @@ clases <- sapply(orTraining[,1:160], class)
 table(clases)
 ```
 
-Data from IMUs is in columns from 8 to 159 so our train and test features are reduced to these columns. Also, many factor columns are found so I will coerce this columns to numeric. NAs will be cleared and low variance features removed.
+Data from IMUs are in columns from 8 to 159 so our train and test features are reduced to these columns. Also, many factor columns are found so I will coerce this columns to numeric. NAs will be cleared and low variance features removed.
 
 ```{r, warning=FALSE}
 # subset columns for features
