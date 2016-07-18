@@ -175,7 +175,26 @@ trainFeatures &lt;- trainFeatures[, -corFeatures]</code></pre>
 <pre class="r"><code>set.seed(2302)
 trCtrl &lt;- trainControl(method = &quot;cv&quot;, number = 5)
 rfModel &lt;- train(classe ~., data=train, method = &quot;rf&quot;, trControl = trCtrl)
-rfModel$finalModel</code></pre>
+rfModel</code></pre>
+<pre><code>## Random Forest 
+## 
+## 19622 samples
+##    45 predictor
+##     5 classes: 'A', 'B', 'C', 'D', 'E' 
+## 
+## No pre-processing
+## Resampling: Cross-Validated (5 fold) 
+## Summary of sample sizes: 15698, 15697, 15699, 15697, 15697 
+## Resampling results across tuning parameters:
+## 
+##   mtry  Accuracy   Kappa      Accuracy SD  Kappa SD   
+##    2    0.9937314  0.9920701  0.001638078  0.002072156
+##   23    0.9943940  0.9929084  0.001728444  0.002186488
+##   45    0.9896035  0.9868478  0.001316583  0.001665681
+## 
+## Accuracy was used to select the optimal model using  the largest value.
+## The final value used for the model was mtry = 23.</code></pre>
+<pre class="r"><code>rfModel$finalModel</code></pre>
 <pre><code>## 
 ## Call:
 ##  randomForest(x = x, y = y, mtry = param$mtry) 

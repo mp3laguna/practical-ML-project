@@ -98,6 +98,7 @@ As seen in E Velloso, A Bulling, H Gellersen, W Ugulino, H Fuks  [[1]](http://gr
 set.seed(2302)
 trCtrl <- trainControl(method = "cv", number = 5)
 rfModel <- train(classe ~., data=train, method = "rf", trControl = trCtrl)
+rfModel
 rfModel$finalModel
 ```
 
